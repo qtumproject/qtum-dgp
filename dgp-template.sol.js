@@ -86,8 +86,8 @@ contract dgp{
 		}
 		if(_type==2){
 			if(tallyAdminVotes(currentProposals.keys[_type].votes)>=activeVotesRequired.adminVotesForParams && tallyGovVotes(currentProposals.keys[_type].votes)>=activeVotesRequired.govVotesForParams){
-				if(paramsHistory.length>0 && paramsHistory[paramsHistory.length-1].blockHeight==block.number) throw; // don't add activate params on a height having existing params
-				paramsHistory.push(paramsInstance(block.number,currentProposals.keys[_type].proposal)); // save params activation block and address				
+				if(paramsHistory.length>0 && paramsHistory[paramsHistory.length-1].blockHeight==block.number+1) throw; // don't add activate params on a height having existing params
+				paramsHistory.push(paramsInstance(block.number+1,currentProposals.keys[_type].proposal)); // save params activation block and address				
 				clearAddressProposal(_type);
 			}
 		}
@@ -330,7 +330,7 @@ contract dgp{
 	function getParamHeightAtIndex(uint _paramIndex) constant returns (uint paramsHeight){
 		return paramsHistory[_paramIndex].blockHeight;
 	}
-	
+
 	function getParamCount() constant returns (uint paramsCount){
 		return paramsHistory.length;
 	}
