@@ -13,10 +13,10 @@ uint32[39] _gasSchedule=[
 10, //6: tierStepGas6
 10, //7: tierStepGas7
 10, //8: expGas
-10, //9: expByteGas
+50, //9: expByteGas
 30, //10: sha3Gas
 6, //11: sha3WordGas
-50, //12: sloadGas
+200, //12: sloadGas
 20000, //13: sstoreSetGas
 5000, //14: sstoreResetGas
 15000, //15: sstoreRefundGas
@@ -25,7 +25,7 @@ uint32[39] _gasSchedule=[
 8, //18: logDataGas
 375, //19: logTopicGas
 32000, //20: createGas
-40, //21: callGas
+700, //21: callGas
 2300, //22: callStipend
 9000, //23: callValueTransferGas
 25000, //24: callNewAccountGas
@@ -38,11 +38,11 @@ uint32[39] _gasSchedule=[
 4, //31: txDataZeroGas
 68, //32: txDataNonZeroGas
 3, //33: copyGas
-20, //34: extcodesizeGas
-20, //35: extcodecopyGas
-20, //36: balanceGas
-0, //37: suicideGas
-uint32(-1) //38: maxCodeSize
+700, //34: extcodesizeGas
+700, //35: extcodecopyGas
+400, //36: balanceGas
+5000, //37: suicideGas
+24576 //38: maxCodeSize
 
 ];
 function getSchedule() constant returns(uint32[39] _schedule){
