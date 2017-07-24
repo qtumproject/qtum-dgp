@@ -63,8 +63,8 @@ contract dgp{
 		// type 0: adminKey
 		// type 1: govKey
 		// type 2: paramsAddress
-		if(_type==0 && getArrayNonNullLenght(adminKeys)>=maxKeys) throw; // we have too many admin keys
-		if(_type==1 && getArrayNonNullLenght(govKeys)>=maxKeys) throw; // we have too many gov keys
+		if(_type==0 && getArrayNonNullLength(adminKeys)>=maxKeys) throw; // we have too many admin keys
+		if(_type==1 && getArrayNonNullLength(govKeys)>=maxKeys) throw; // we have too many gov keys
 		if(_proposalAddress==0) throw; // invalid address
 		if(_type>2) throw; // invalid type
 		if((_type==0 || _type==1) && (isAdminKey(_proposalAddress) || isGovKey(_proposalAddress))) throw; // don't add existing keys as proposals
@@ -107,12 +107,12 @@ contract dgp{
 		if(_proposalAddress==0) throw; // invalid address
 		if(_type>1) throw; // invalid type
 		if(_type==0){
-		uint adminsCount=getArrayNonNullLenght(adminKeys);
+		uint adminsCount=getArrayNonNullLength(adminKeys);
 		if(adminsCount==activeVotesRequired.adminVotesForParams || adminsCount==activeVotesRequired.adminVotesForManagement) throw; // cannot reduce the number of admins below the required ones
 		if(!isAdminKey(_proposalAddress)) throw; // don't remove non existent address
 		}
 		if(_type==1){
-		if(getArrayNonNullLenght(govKeys)==activeVotesRequired.govVotesForParams) throw; // cannot reduce the number of govs below the required ones
+		if(getArrayNonNullLength(govKeys)==activeVotesRequired.govVotesForParams) throw; // cannot reduce the number of govs below the required ones
 		if(!isGovKey(_proposalAddress)) throw; // don't remove non existent address
 		}
 		if(!currentProposals.removeKeys[_type].onVote){
@@ -172,8 +172,8 @@ contract dgp{
 		// type 1: govVotesForParams
 		// type 2: adminVotesForManagement
 		if(_type>2) throw; // invalid type
-		if((_type==0 || _type==2) && _proposalUint>getArrayNonNullLenght(adminKeys)) throw; // required number cannot be greater than active admin keys count
-		if(_type==1 && _proposalUint>getArrayNonNullLenght(govKeys)) throw; // required number cannot be greater than active gov keys count
+		if((_type==0 || _type==2) && _proposalUint>getArrayNonNullLength(adminKeys)) throw; // required number cannot be greater than active admin keys count
+		if(_type==1 && _proposalUint>getArrayNonNullLength(govKeys)) throw; // required number cannot be greater than active gov keys count
 		if(_type==0)if(activeVotesRequired.adminVotesForParams==_proposalUint) throw; // cannot put a proposal for the same active value
 		if(_type==1)if(activeVotesRequired.govVotesForParams==_proposalUint) throw; // cannot put a proposal for the same active value
 		if(_type==2)if(activeVotesRequired.adminVotesForManagement==_proposalUint) throw; // cannot put a proposal for the same active value
@@ -256,7 +256,7 @@ contract dgp{
 		return count;
 	}
 
-	function getArrayNonNullLenght(address[] valsArr) constant returns (uint valsCount){
+	function getArrayNonNullLength(address[] valsArr) constant returns (uint valsCount){
 		uint i;
 		uint count=0;
 		for(i=0;i<valsArr.length;i++){
