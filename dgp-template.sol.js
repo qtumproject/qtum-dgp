@@ -336,6 +336,7 @@ contract dgp{
 	}
 
 	function getParamsForBlock(uint _reqBlockHeight) constant returns (address paramsAddress){
+		if(paramsHistory.length==0)return 0;
 		uint i;
 		for(i=paramsHistory.length-1;i>0;i--){
 			if(paramsHistory[i].blockHeight<=_reqBlockHeight)return paramsHistory[i].paramsAddress;
