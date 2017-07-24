@@ -78,7 +78,7 @@ contract dgp{
 		}else{
 			if(block.number-currentProposals.keys[_type].proposalHeight>proposalExpiryBlocks){
 				clearAddressProposal(_type); //clear expired proposals
-				throw;
+				return;
 			}
 			if(currentProposals.keys[_type].proposal!=_proposalAddress) throw; // can only vote for current on vote address
 			if(alreadyVoted(msg.sender, currentProposals.keys[_type].votes)) throw; // cannot vote twice			
@@ -124,7 +124,7 @@ contract dgp{
 		}else{
 			if(block.number-currentProposals.removeKeys[_type].proposalHeight>proposalExpiryBlocks){
 				clearAddressRemovalProposal(_type); //clear expired proposals
-				throw;
+				return;
 			}
 			if(currentProposals.removeKeys[_type].proposal!=_proposalAddress) throw; // can only vote for current on vote address
 			if(alreadyVoted(msg.sender, currentProposals.removeKeys[_type].votes)) throw; // cannot vote twice			
@@ -186,7 +186,7 @@ contract dgp{
 		}else{
 			if(block.number-currentProposals.uints[_type].proposalHeight>proposalExpiryBlocks){
 				clearChangeValueProposal(_type); //clear expired proposals
-				throw;
+				return;
 			}
 			if(currentProposals.uints[_type].proposal!=_proposalUint) throw; // can only vote for current on vote value
 			if(alreadyVoted(msg.sender, currentProposals.uints[_type].votes)) throw; // cannot vote twice			
