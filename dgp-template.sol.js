@@ -12,17 +12,20 @@ contract dgp{
 	address[] govKeys; 
 	uint private maxKeys=30;
 	bool private initialAdminSet=false;
+	uint private proposalExpiryBlocks=21600;
 
 	struct addressProposal{
 		bool onVote;
 		address[] votes;
 		address proposal;
+		uint proposalHeight;
 	}
 
 	struct uintProposal{
 		bool onVote;
 		address[] votes;
 		uint proposal;
+		uint proposalHeight;
 	}
 
 	struct proposals{
@@ -69,9 +72,14 @@ contract dgp{
 			if(isGovKey(msg.sender)) throw; // Only Admin can initiate vote
 			currentProposals.keys[_type].onVote=true; // put proposal on vote, no changes until vote is setteled or removed
 			currentProposals.keys[_type].proposal=_proposalAddress; // set new proposal for vote
+			currentProposals.keys[_type].proposalHeight=block.number; // set new proposal initial height
 			currentProposals.keys[_type].votes.length=0; // clear votes
 			currentProposals.keys[_type].votes.push(msg.sender); // add sender vote
 		}else{
+			if(block.number-currentProposals.keys[_type].proposalHeight>proposalExpiryBlocks){
+				clearAddressProposal(_type); //clear expired proposals
+				throw;
+			}
 			if(currentProposals.keys[_type].proposal!=_proposalAddress) throw; // can only vote for current on vote address
 			if(alreadyVoted(msg.sender, currentProposals.keys[_type].votes)) throw; // cannot vote twice			
 			currentProposals.keys[_type].votes.push(msg.sender); // add sender vote
@@ -110,9 +118,14 @@ contract dgp{
 		if(!currentProposals.removeKeys[_type].onVote){
 			currentProposals.removeKeys[_type].onVote=true; // put proposal on vote, no changes until vote is setteled or removed
 			currentProposals.removeKeys[_type].proposal=_proposalAddress; // set new proposal for vote
+			currentProposals.removeKeys[_type].proposalHeight=block.number; // set new proposal initial height
 			currentProposals.removeKeys[_type].votes.length=0; // clear votes
 			currentProposals.removeKeys[_type].votes.push(msg.sender); // add sender vote
 		}else{
+			if(block.number-currentProposals.removeKeys[_type].proposalHeight>proposalExpiryBlocks){
+				clearAddressRemovalProposal(_type); //clear expired proposals
+				throw;
+			}
 			if(currentProposals.removeKeys[_type].proposal!=_proposalAddress) throw; // can only vote for current on vote address
 			if(alreadyVoted(msg.sender, currentProposals.removeKeys[_type].votes)) throw; // cannot vote twice			
 			currentProposals.removeKeys[_type].votes.push(msg.sender); // add sender vote
@@ -131,12 +144,14 @@ contract dgp{
 	function clearAddressProposal(uint _type) private{
 		currentProposals.keys[_type].proposal=0; // clear current proposal address
 		currentProposals.keys[_type].votes.length=0; // clear votes
+		currentProposals.keys[_type].proposalHeight=0; // clear proposal height
 		currentProposals.keys[_type].onVote=false; // open submission
 	}
 
 	function clearAddressRemovalProposal(uint _type) private{
 		currentProposals.removeKeys[_type].proposal=0; // clear current proposal address
 		currentProposals.removeKeys[_type].votes.length=0; // clear votes
+		currentProposals.removeKeys[_type].proposalHeight=0; // clear proposal height
 		currentProposals.removeKeys[_type].onVote=false; // open submission
 	}
 
@@ -165,9 +180,14 @@ contract dgp{
 		if(!currentProposals.uints[_type].onVote){
 			currentProposals.uints[_type].onVote=true; // put proposal on vote, no changes until vote is setteled or removed
 			currentProposals.uints[_type].proposal=_proposalUint; // set new proposal for vote
+			currentProposals.uints[_type].proposalHeight=block.number; // set new proposal initial height
 			currentProposals.uints[_type].votes.length=0; // clear votes
 			currentProposals.uints[_type].votes.push(msg.sender); // add sender vote
 		}else{
+			if(block.number-currentProposals.uints[_type].proposalHeight>proposalExpiryBlocks){
+				clearChangeValueProposal(_type); //clear expired proposals
+				throw;
+			}
 			if(currentProposals.uints[_type].proposal!=_proposalUint) throw; // can only vote for current on vote value
 			if(alreadyVoted(msg.sender, currentProposals.uints[_type].votes)) throw; // cannot vote twice			
 			currentProposals.uints[_type].votes.push(msg.sender); // add sender vote
@@ -190,6 +210,7 @@ contract dgp{
 	function clearChangeValueProposal(uint _type) private{
 		currentProposals.uints[_type].proposal=0; // clear current proposal address
 		currentProposals.uints[_type].votes.length=0; // clear votes
+		currentProposals.uints[_type].proposalHeight=0; // clear proposal height
 		currentProposals.uints[_type].onVote=false; // open submission
 	}
 
