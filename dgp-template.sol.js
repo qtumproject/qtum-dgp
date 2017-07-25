@@ -44,12 +44,12 @@ contract dgp{
 	votesRequired activeVotesRequired;
 
 	modifier onlyAdmin{
-		require(isAdminKey(msg.sender));
+		if(!isAdminKey(msg.sender))throw;
 		_;
 	}
 
 	modifier onlyAdminOrGov{
-		require(isAdminKey(msg.sender) || isGovKey(msg.sender));
+		if(!isAdminKey(msg.sender) && !isGovKey(msg.sender))throw;
 		_;
 	}
 
